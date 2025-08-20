@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product record</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <product-form>
+            <form slot="primary">
+                <div class="form__row">
+                    <div class="form__container_half">
+                        <label for="txt1">Product Name (Required)</label>
+                        <input id="txt1" type="text" name="txt-input" identity data-required data-length="3"/>
+                    </div>
+                    <div class="form__container_half">
+                        <label for="sel1">Category</label>
+                        <select id="sel1" name="sel-input" data-required>
+                            <option value="">Select...</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="form__container_half">
+                        <label for="price1">Price ($)</label>
+                        <input id="price1" type="number" name="price" data-required/>
+                    </div>
+                    <div class="form__container_half">
+                        <label for="sku1">SKU (Format: ABC-123)</label>
+                        <input id="sku1" type="text" name="sku" data-regex="^[A-Z]{3}-[0-9]{3}$"/>
+                    </div>
+                </div>
+            </form>
+            <div slot="subforms">
+                <form title="Product Details" style="display: none;">
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="txt_1_1">Description (Min 10 chars)</label>
+                            <input id="txt_1_1" type="text" name="description" data-length="10"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="sel_1_1">Condition (Required)</label>
+                            <select id="sel_1_1" name="condition" data-required>
+                                <option value="">Select...</option>
+                                <option value="new">New</option>
+                                <option value="used">Used</option>
+                                <option value="refurbished">Refurbished</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="weight_1_1">Weight (kg)</label>
+                            <input id="weight_1_1" type="number" step="0.01" name="weight"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="brand_1_1">Brand</label>
+                            <input id="brand_1_1" type="text" name="brand"/>
+                        </div>
+                    </div>
+                </form>
+                <form title="Inventory" style="display: none;">
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="txt_2_1">Stock Quantity (Required)</label>
+                            <input id="txt_2_1" type="number" name="stock_quantity" data-required/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="sel_2_1">Warehouse (Required)</label>
+                            <select id="sel_2_1" name="warehouse" data-required>
+                                <option value="">Select...</option>
+                                <option value="warehouse_a">Warehouse A</option>
+                                <option value="warehouse_b">Warehouse B</option>
+                                <option value="warehouse_c">Warehouse C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="reorder_2_1">Reorder Level</label>
+                            <input id="reorder_2_1" type="number" name="reorder_level"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="supplier_2_1">Supplier Code</label>
+                            <input id="supplier_2_1" type="text" name="supplier_code"/>
+                        </div>
+                    </div>
+                </form>
+                <form title="Shipping" style="display: none;">
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="txt_3_1">Shipping Class</label>
+                            <input id="txt_3_1" type="text" name="shipping_class"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="sel_3_1">Fragile</label>
+                            <select id="sel_3_1" name="fragile">
+                                <option value="">Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="dimensions_3_1">Dimensions (LxWxH cm)</label>
+                            <input id="dimensions_3_1" type="text" name="dimensions" data-regex="^[0-9]+x[0-9]+x[0-9]+$"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="handling_3_1">Special Handling</label>
+                            <input id="handling_3_1" type="text" name="special_handling"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form__actions" slot="actions">
+                <button name="save">Save Product</button>
+                <button name="clear">Clear Forms</button>
+                <button name="save_clear">Save and Clear</button>
+            </div>
+        </product-form>
+    </body>
+    <script type="module">
+        import './js/lib/product-form.js';
+        
+        window.addEventListener('load', () => {
+            const productForm = document.querySelector('product-form');
+            
+            // Set up callbacks
+            productForm.set_callbacks(
+                // onSubmit callback
+                (data) => {
+                    console.log('Form submitted with data:', data);
+                    alert('Product saved!\nIdentity: ' + data.identity + '\nData: ' + JSON.stringify(data.data, null, 2));
+                },
+                // onClear callback
+                () => {
+                    console.log('Form cleared');
+                    alert('Form has been cleared');
+                },
+                // onDirty callback
+                () => {
+                    return confirm('You have unsaved changes. Are you sure you want to discard them?');
+                }
+            );
+            
+            // Demonstrate loading data after 3 seconds
+            setTimeout(() => {
+                const sampleData = {
+                    identity: 'sample-identity-12345',
+                    data: {
+                        'txt-input': 'Sample Product',
+                        'sel-input': 'electronics',
+                        'price': '99.99',
+                        'sku': 'ABC-123',
+                        'description': 'This is a sample product description',
+                        'condition': 'new',
+                        'weight': '1.5',
+                        'brand': 'Sample Brand',
+                        'stock_quantity': '100',
+                        'warehouse': 'warehouse_a',
+                        'reorder_level': '10',
+                        'supplier_code': 'SUP001'
+                    }
+                };
+                
+                console.log('Loading sample data after 3 seconds...');
+                productForm.value = sampleData;
+            }, 3000);
+        });
+    </script>
+</html>
