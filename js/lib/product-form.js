@@ -155,7 +155,11 @@ export class ProductForm extends HTMLElement {
     }
 
     get value() {
-        const data = { identity: this.#get_identity(), data: {} };
+        const data = { 
+            identity: this.#get_identity(), 
+            validation: this.#validate_all_forms(),
+            data: {} 
+        };
         
         // Get primary form data
         const primaryForm = this.querySelector('[slot="primary"]');
@@ -435,6 +439,23 @@ export class ProductForm extends HTMLElement {
                 if (!pattern.test(field.value)) {
                     return false;
                 }
+            }
+        }
+        
+        return true;
+    }
+    
+    #validate_all_forms() {
+        // Validate primary form
+        const primaryForm = this.querySelector('[slot="primary"]');
+        if (primaryForm && !this.#validate_form_silently(primaryForm)) {
+            return false;
+        }
+        
+        // Validate all subforms
+        for (const form of this.#subforms) {
+            if (!this.#validate_form_silently(form)) {
+                return false;
             }
         }
         

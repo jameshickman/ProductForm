@@ -133,7 +133,8 @@
                 // onSubmit callback
                 (data) => {
                     console.log('Form submitted with data:', data);
-                    alert('Product saved!\nIdentity: ' + data.identity + '\nData: ' + JSON.stringify(data.data, null, 2));
+                    const validationStatus = data.validation ? 'PASSED' : 'FAILED';
+                    alert('Product saved!\nIdentity: ' + data.identity + '\nValidation: ' + validationStatus + '\nData: ' + JSON.stringify(data.data, null, 2));
                 },
                 // onClear callback
                 () => {
