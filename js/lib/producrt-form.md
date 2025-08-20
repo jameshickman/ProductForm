@@ -21,6 +21,7 @@ Data from and to the from is in the structure of:
 ```json
 {
     "identity": "unique-identity",
+    "version": 234,
     "validation": true,
     "data": {
         "field_name": "value", ...
@@ -34,3 +35,6 @@ It is possible to save a record that does not pass validation, but it is noted i
 
 Records created by this form must have a unique identity string of a UUID4 concatenated with the MD5 of the value of the text field marked with the “identity” property.
 If a new record being created, the identity is assigned as soon as the field discussed above has a value. Loading data into the forms requires the identity field. When editing the identity is preserved and always saved again with the original identity. The identity needs to be set in a hidden “identity” field on the main form, create the element if it does not already exist.
+
+Records can also have an integer version number, typically a database ID. This is optional because a database ID can only be allocated once it is saved to the back-end. New records don’t have an ID since they don’t exist yet in the database. This is important when editing though, in the event that the same database record is edited, but it may be new on every edit if retaining past versions of the record.
+
