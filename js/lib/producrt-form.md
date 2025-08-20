@@ -21,6 +21,7 @@ Data from and to the from is in the structure of:
 ```json
 {
     "identity": "unique-identity",
+    "validation": true,
     "data": {
         "field_name": "value", ...
     }
