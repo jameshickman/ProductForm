@@ -9,11 +9,11 @@
             <form slot="primary">
                 <div class="form__row">
                     <div class="form__container_half">
-                        <label for="txt1">Product Name (Required)</label>
+                        <label for="txt1">Product Name <span style="color: red;">*</span></label>
                         <input id="txt1" type="text" name="txt-input" identity data-required data-length="3"/>
                     </div>
                     <div class="form__container_half">
-                        <label for="sel1">Category</label>
+                        <label for="sel1">Category <span style="color: red;">*</span></label>
                         <select id="sel1" name="sel-input" data-required>
                             <option value="">Select...</option>
                             <option value="electronics">Electronics</option>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="form__row">
                     <div class="form__container_half">
-                        <label for="price1">Price ($)</label>
+                        <label for="price1">Price ($) <span style="color: red;">*</span></label>
                         <input id="price1" type="number" name="price" data-required/>
                     </div>
                     <div class="form__container_half">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="form__row">
                     <div class="form__container_half">
-                        <label>Featured Product (Required)</label>
+                        <label>Featured Product <span style="color: red;">*</span></label>
                         <trinary-input name="is_featured" data-required></trinary-input>
                     </div>
                     <div class="form__container_half">
@@ -51,7 +51,7 @@
                             <input id="txt_1_1" type="text" name="description" data-length="10"/>
                         </div>
                         <div class="form__container_half">
-                            <label for="sel_1_1">Condition (Required)</label>
+                            <label for="sel_1_1">Condition <span style="color: red;">*</span></label>
                             <select id="sel_1_1" name="condition" data-required>
                                 <option value="">Select...</option>
                                 <option value="new">New</option>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="form__row">
                         <div class="form__container_half">
-                            <label>Eco-Friendly (Required)</label>
+                            <label>Eco-Friendly <span style="color: red;">*</span></label>
                             <trinary-input name="is_eco_friendly" data-required></trinary-input>
                         </div>
                         <div class="form__container_half">
@@ -84,11 +84,11 @@
                 <form title="Inventory" style="display: none;">
                     <div class="form__row">
                         <div class="form__container_half">
-                            <label for="txt_2_1">Stock Quantity (Required)</label>
+                            <label for="txt_2_1">Stock Quantity <span style="color: red;">*</span></label>
                             <input id="txt_2_1" type="number" name="stock_quantity" data-required/>
                         </div>
                         <div class="form__container_half">
-                            <label for="sel_2_1">Warehouse (Required)</label>
+                            <label for="sel_2_1">Warehouse <span style="color: red;">*</span></label>
                             <select id="sel_2_1" name="warehouse" data-required>
                                 <option value="">Select...</option>
                                 <option value="warehouse_a">Warehouse A</option>

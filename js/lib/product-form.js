@@ -87,8 +87,8 @@ const STYLES = `
     background: #e6f3ff;
 }
 .subform-nav-btn.has-errors {
-    border-color: red;
-    background: #ffe6e6;
+    border-color: red !important;
+    background: #ffe6e6 !important;
 }
 .subforms-container {
     flex: 1;
@@ -429,8 +429,17 @@ export class ProductForm extends HTMLElement {
         const hasData = any_active(formData);
         const isValid = this.#validate_form_silently(form);
         
-        button.classList.toggle('has-data', hasData);
-        button.classList.toggle('has-errors', hasData && !isValid);
+        // Clear all state classes first
+        button.classList.remove('has-data', 'has-errors');
+        
+        // Apply appropriate state classes
+        if (hasData) {
+            if (isValid) {
+                button.classList.add('has-data');
+            } else {
+                button.classList.add('has-errors');
+            }
+        }
     }
     
     #update_nav_buttons() {
