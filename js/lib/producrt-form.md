@@ -28,6 +28,8 @@ Data from and to the from is in the structure of:
 }
 ```
 
+It is possible to save a record that does not pass validation, but it is noted in the “validation” flag.
+
 ## Record identity
 
 Records created by this form must have a unique identity string of a UUID4 concatenated with the MD5 of the value of the text field marked with the “identity” property.
