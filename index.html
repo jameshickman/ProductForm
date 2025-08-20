@@ -134,7 +134,8 @@
                 (data) => {
                     console.log('Form submitted with data:', data);
                     const validationStatus = data.validation ? 'PASSED' : 'FAILED';
-                    alert('Product saved!\nIdentity: ' + data.identity + '\nValidation: ' + validationStatus + '\nData: ' + JSON.stringify(data.data, null, 2));
+                     const version = data.version ? `Version: ${data.version}` : 'Version: NEW RECORD';
+                    alert('Product saved!\nIdentity: ' + data.identity + '\n' + version + '\nValidation: ' + validationStatus + '\nData: ' + JSON.stringify(data.data, null, 2));
                 },
                 // onClear callback
                 () => {
@@ -147,29 +148,93 @@
                 }
             );
             
-            // Demonstrate loading data after 3 seconds
-            setTimeout(() => {
-                const sampleData = {
-                    identity: 'sample-identity-12345',
+            // Simulate database backend operations
+            async function simulateBackendLoad() {
+                console.log('📡 Connecting to database...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                console.log('🔍 Querying product record ID 234...');
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                console.log('✅ Record found! Loading data...');
+                const databaseRecord = {
+                    identity: 'b8c7e4a2-1f3d-4e5f-9a2b-6d8e1c3f7b9a4c2f8e1a3b5d7e9f2a4b6c8d0e1f3a5b7c9e0f2a4b6c8d0e1f3a5b7',
+                    version: 234,
+                    validation: true,
                     data: {
-                        'txt-input': 'Sample Product',
+                        'txt-input': 'Wireless Bluetooth Headphones',
                         'sel-input': 'electronics',
-                        'price': '99.99',
-                        'sku': 'ABC-123',
-                        'description': 'This is a sample product description',
+                        'price': '79.99',
+                        'sku': 'ELC-001',
+                        'description': 'Premium noise-canceling wireless headphones with 30-hour battery life',
                         'condition': 'new',
-                        'weight': '1.5',
-                        'brand': 'Sample Brand',
-                        'stock_quantity': '100',
+                        'weight': '0.25',
+                        'brand': 'TechAudio',
+                        'stock_quantity': '45',
                         'warehouse': 'warehouse_a',
                         'reorder_level': '10',
-                        'supplier_code': 'SUP001'
+                        'supplier_code': 'SUP001',
+                        'shipping_class': 'standard',
+                        'fragile': 'yes',
+                        'dimensions': '20x18x8',
+                        'special_handling': 'Electronics - Handle with care'
                     }
                 };
                 
-                console.log('Loading sample data after 3 seconds...');
-                productForm.value = sampleData;
-            }, 3000);
+                productForm.value = databaseRecord;
+                console.log('✅ Database record loaded successfully');
+            }
+            
+            // Enhanced save callback to simulate backend save
+            const originalSubmitCallback = productForm.set_callbacks;
+            productForm.set_callbacks(
+                // onSubmit callback - simulate backend save
+                async (data) => {
+                    console.log('💾 Saving to database...', data);
+                    
+                    try {
+                        // Simulate network delay
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        
+                        // Simulate assigning new version if it's a new record
+                        if (!data.version) {
+                            data.version = Math.floor(Math.random() * 1000) + 100;
+                            console.log(`🆕 New record created with ID: ${data.version}`);
+                        } else {
+                            console.log(`✏️ Updated existing record ID: ${data.version}`);
+                        }
+                        
+                        const validationStatus = data.validation ? 'PASSED' : 'FAILED';
+                        const recordType = data.version < 234 ? 'NEW RECORD' : 'EXISTING RECORD';
+                        const version = `Version: ${data.version}`;
+                        
+                        alert(`💾 ${recordType} SAVED!\n\n` +
+                              `Identity: ${data.identity}\n` +
+                              `${version}\n` +
+                              `Validation: ${validationStatus}\n\n` +
+                              `Data: ${JSON.stringify(data.data, null, 2)}`);
+                              
+                    } catch (error) {
+                        console.error('❌ Database save failed:', error);
+                        alert('❌ Save failed! Please try again.');
+                    }
+                },
+                // onClear callback
+                () => {
+                    console.log('🗑️ Form cleared - ready for new record');
+                    alert('🗑️ Form has been cleared\nReady to create new record');
+                },
+                // onDirty callback
+                () => {
+                    return confirm('⚠️ Unsaved Changes\n\nYou have unsaved changes that will be lost.\nAre you sure you want to continue?');
+                }
+            );
+            
+            // Load database record after page loads
+            setTimeout(() => {
+                console.log('🚀 Simulating database load...');
+                simulateBackendLoad();
+            }, 2000);
         });
     </script>
 </html>

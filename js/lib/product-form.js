@@ -137,6 +137,7 @@ export class ProductForm extends HTMLElement {
     #subforms = [];
     #nav_buttons = [];
     #identity_field = null;
+    #version_field = null;
     
     constructor() {
         super();
@@ -161,6 +162,12 @@ export class ProductForm extends HTMLElement {
             data: {} 
         };
         
+        // Include version if it exists (for database records)
+        const version = this.#get_version();
+        if (version !== null) {
+            data.version = version;
+        }
+        
         // Get primary form data
         const primaryForm = this.querySelector('[slot="primary"]');
         if (primaryForm) {
@@ -182,6 +189,7 @@ export class ProductForm extends HTMLElement {
         }
         
         this.#set_identity(data.identity);
+        this.#set_version(data.version);
         this.#populate_forms(data.data);
         this.#state = STATE_CLEAR;
         this.#update_nav_buttons();
@@ -192,6 +200,7 @@ export class ProductForm extends HTMLElement {
         this.#setup_action_buttons();
         this.#setup_primary_form();
         this.#setup_identity_field();
+        this.#setup_version_field();
     }
     
     #setup_subforms() {
@@ -462,10 +471,39 @@ export class ProductForm extends HTMLElement {
         return true;
     }
     
+    #setup_version_field() {
+        const primaryForm = this.querySelector('[slot="primary"]');
+        if (!primaryForm) return;
+        
+        // Check if hidden version field exists, create if not
+        this.#version_field = primaryForm.querySelector('input[name="version"]');
+        if (!this.#version_field) {
+            this.#version_field = document.createElement('input');
+            this.#version_field.type = 'hidden';
+            this.#version_field.name = 'version';
+            primaryForm.appendChild(this.#version_field);
+        }
+    }
+
+    #get_version() {
+        const value = this.#version_field?.value;
+        if (!value || value === '') {
+            return null;
+        }
+        const parsed = parseInt(value);
+        return isNaN(parsed) ? null : parsed;
+    }
+    
+    #set_version(version) {
+        if (this.#version_field) {
+            this.#version_field.value = (version !== undefined && version !== null) ? version.toString() : '';
+        }
+    }
+
     #extract_form_data(form, data) {
         const fields = form.querySelectorAll('input, select, textarea');
         fields.forEach(field => {
-            if (field.name && field.name !== 'identity') {
+            if (field.name && field.name !== 'identity' && field.name !== 'version') {
                 data[field.name] = field.value;
             }
         });
@@ -557,6 +595,7 @@ export class ProductForm extends HTMLElement {
         });
         
         this.#set_identity('');
+        this.#set_version(null);
         this.#update_nav_buttons();
     }
     
