@@ -120,6 +120,18 @@ class TrinaryElement extends HTMLElement {
         this.#set_state();
     }
 
+    get name() {
+        return this.getAttribute('name');
+    }
+
+    set name(value) {
+        if (value) {
+            this.setAttribute('name', value);
+        } else {
+            this.removeAttribute('name');
+        }
+    }
+
     #set_state() {
         switch(this.#value) {
             case STATE_TRUE:

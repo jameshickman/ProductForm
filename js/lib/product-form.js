@@ -284,9 +284,12 @@ export class ProductForm extends HTMLElement {
     }
     
     #setup_form_validation(form, formIndex) {
-        const fields = form.querySelectorAll('input, select, textarea');
+        // Get both standard form elements and custom form elements
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
         
-        fields.forEach(field => {
+        allFields.forEach(field => {
             // Create validation messages
             this.#create_validation_messages(field);
             
@@ -299,10 +302,16 @@ export class ProductForm extends HTMLElement {
                 }
             };
 
-            field.addEventListener('input', validateAndUpdate);
-            field.addEventListener('change', validateAndUpdate);
-            field.addEventListener('blur', validateAndUpdate);
-            field.addEventListener('keyup', validateAndUpdate);
+            // Standard form elements support multiple events
+            if (field.tagName.toLowerCase() !== 'trinary-input') {
+                field.addEventListener('input', validateAndUpdate);
+                field.addEventListener('change', validateAndUpdate);
+                field.addEventListener('blur', validateAndUpdate);
+                field.addEventListener('keyup', validateAndUpdate);
+            } else {
+                // Custom elements typically only need change event
+                field.addEventListener('change', validateAndUpdate);
+            }
         });
     }
     
@@ -384,10 +393,12 @@ export class ProductForm extends HTMLElement {
     }
     
     #validate_form(form) {
-        const fields = form.querySelectorAll('input, select, textarea');
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
         let allValid = true;
         
-        fields.forEach(field => {
+        allFields.forEach(field => {
             if (!this.#validate_field(field)) {
                 allValid = false;
             }
@@ -429,9 +440,11 @@ export class ProductForm extends HTMLElement {
     }
     
     #validate_form_silently(form) {
-        const fields = form.querySelectorAll('input, select, textarea');
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
         
-        for (const field of fields) {
+        for (const field of allFields) {
             if (field.hasAttribute('data-required') && !field.value.trim()) {
                 return false;
             }
@@ -501,8 +514,11 @@ export class ProductForm extends HTMLElement {
     }
 
     #extract_form_data(form, data) {
-        const fields = form.querySelectorAll('input, select, textarea');
-        fields.forEach(field => {
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
+        
+        allFields.forEach(field => {
             if (field.name && field.name !== 'identity' && field.name !== 'version') {
                 data[field.name] = field.value;
             }
@@ -523,8 +539,11 @@ export class ProductForm extends HTMLElement {
     }
     
     #populate_form(form, data) {
-        const fields = form.querySelectorAll('input, select, textarea');
-        fields.forEach(field => {
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
+        
+        allFields.forEach(field => {
             if (field.name && data.hasOwnProperty(field.name)) {
                 field.value = data[field.name];
             }
@@ -600,8 +619,11 @@ export class ProductForm extends HTMLElement {
     }
     
     #clear_form(form) {
-        const fields = form.querySelectorAll('input, select, textarea');
-        fields.forEach(field => {
+        const standardFields = form.querySelectorAll('input, select, textarea');
+        const customFields = form.querySelectorAll('trinary-input');
+        const allFields = [...standardFields, ...customFields];
+        
+        allFields.forEach(field => {
             if (field.type === 'checkbox' || field.type === 'radio') {
                 field.checked = false;
             } else {

@@ -32,6 +32,16 @@
                         <input id="sku1" type="text" name="sku" data-regex="^[A-Z]{3}-[0-9]{3}$"/>
                     </div>
                 </div>
+                <div class="form__row">
+                    <div class="form__container_half">
+                        <label>Featured Product (Required)</label>
+                        <trinary-input name="is_featured" data-required></trinary-input>
+                    </div>
+                    <div class="form__container_half">
+                        <label>Available for Sale</label>
+                        <trinary-input name="is_available"></trinary-input>
+                    </div>
+                </div>
             </form>
             <div slot="subforms">
                 <form title="Product Details" style="display: none;">
@@ -58,6 +68,16 @@
                         <div class="form__container_half">
                             <label for="brand_1_1">Brand</label>
                             <input id="brand_1_1" type="text" name="brand"/>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label>Eco-Friendly (Required)</label>
+                            <trinary-input name="is_eco_friendly" data-required></trinary-input>
+                        </div>
+                        <div class="form__container_half">
+                            <label>Limited Edition</label>
+                            <trinary-input name="is_limited_edition"></trinary-input>
                         </div>
                     </div>
                 </form>
@@ -124,6 +144,7 @@
     </body>
     <script type="module">
         import './js/lib/product-form.js';
+        import './js/lib/trinary_ce.js';
         
         window.addEventListener('load', () => {
             const productForm = document.querySelector('product-form');
@@ -166,10 +187,14 @@
                         'sel-input': 'electronics',
                         'price': '79.99',
                         'sku': 'ELC-001',
+                        'is_featured': 'true',
+                        'is_available': 'true',
                         'description': 'Premium noise-canceling wireless headphones with 30-hour battery life',
                         'condition': 'new',
                         'weight': '0.25',
                         'brand': 'TechAudio',
+                        'is_eco_friendly': 'false',
+                        'is_limited_edition': '',
                         'stock_quantity': '45',
                         'warehouse': 'warehouse_a',
                         'reorder_level': '10',
