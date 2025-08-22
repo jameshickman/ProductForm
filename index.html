@@ -14,12 +14,18 @@
                     </div>
                     <div class="form__container_half">
                         <label for="sel1">Category <span style="color: red;">*</span></label>
-                        <select id="sel1" name="sel-input" data-required>
-                            <option value="">Select...</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="books">Books</option>
-                        </select>
+                        <filtered-select>
+                            <select id="sel1" name="sel-input" data-required>
+                                <option value="">Select...</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="books">Books</option>
+                                <option value="home">Home & Garden</option>
+                                <option value="sports">Sports & Outdoors</option>
+                                <option value="health">Health & Beauty</option>
+                                <option value="automotive">Automotive</option>
+                            </select>
+                        </filtered-select>
                     </div>
                 </div>
                 <div class="form__row">
@@ -52,12 +58,25 @@
                         </div>
                         <div class="form__container_half">
                             <label for="sel_1_1">Condition <span style="color: red;">*</span></label>
-                            <select id="sel_1_1" name="condition" data-required>
-                                <option value="">Select...</option>
-                                <option value="new">New</option>
-                                <option value="used">Used</option>
-                                <option value="refurbished">Refurbished</option>
-                            </select>
+                            <filtered-select>
+                                <select id="sel_1_1" name="condition" data-required>
+                                    <option value="">Select...</option>
+                                    <optgroup label="Brand New">
+                                        <option value="new">New</option>
+                                        <option value="new_open_box">New - Open Box</option>
+                                        <option value="new_other">New - Other</option>
+                                    </optgroup>
+                                    <optgroup label="Pre-owned">
+                                        <option value="used_excellent">Used - Excellent</option>
+                                        <option value="used_good">Used - Good</option>
+                                        <option value="used_fair">Used - Fair</option>
+                                    </optgroup>
+                                    <optgroup label="Renewed">
+                                        <option value="refurbished">Refurbished</option>
+                                        <option value="manufacturer_refurbished">Manufacturer Refurbished</option>
+                                    </optgroup>
+                                </select>
+                            </filtered-select>
                         </div>
                     </div>
                     <div class="form__row">
@@ -67,7 +86,31 @@
                         </div>
                         <div class="form__container_half">
                             <label for="brand_1_1">Brand</label>
-                            <input id="brand_1_1" type="text" name="brand"/>
+                            <filtered-select id="custom-theme-example">
+                                <select id="brand_1_1" name="brand">
+                                    <option value="">Select brand...</option>
+                                    <optgroup label="Electronics">
+                                        <option value="apple">Apple</option>
+                                        <option value="samsung">Samsung</option>
+                                        <option value="sony">Sony</option>
+                                        <option value="lg">LG</option>
+                                        <option value="panasonic">Panasonic</option>
+                                    </optgroup>
+                                    <optgroup label="Fashion">
+                                        <option value="nike">Nike</option>
+                                        <option value="adidas">Adidas</option>
+                                        <option value="puma">Puma</option>
+                                        <option value="gucci">Gucci</option>
+                                        <option value="versace">Versace</option>
+                                    </optgroup>
+                                    <optgroup label="Home & Garden">
+                                        <option value="ikea">IKEA</option>
+                                        <option value="home_depot">Home Depot</option>
+                                        <option value="lowes">Lowe's</option>
+                                        <option value="wayfair">Wayfair</option>
+                                    </optgroup>
+                                </select>
+                            </filtered-select>
                         </div>
                     </div>
                     <div class="form__row">
@@ -89,12 +132,16 @@
                         </div>
                         <div class="form__container_half">
                             <label for="sel_2_1">Warehouse <span style="color: red;">*</span></label>
-                            <select id="sel_2_1" name="warehouse" data-required>
-                                <option value="">Select...</option>
-                                <option value="warehouse_a">Warehouse A</option>
-                                <option value="warehouse_b">Warehouse B</option>
-                                <option value="warehouse_c">Warehouse C</option>
-                            </select>
+                            <filtered-select theme="FilteredSelectDarkTheme">
+                                <select id="sel_2_1" name="warehouse" data-required>
+                                    <option value="">Select...</option>
+                                    <option value="warehouse_a">Warehouse A - New York</option>
+                                    <option value="warehouse_b">Warehouse B - California</option>
+                                    <option value="warehouse_c">Warehouse C - Texas</option>
+                                    <option value="warehouse_d">Warehouse D - Florida</option>
+                                    <option value="warehouse_e">Warehouse E - Illinois</option>
+                                </select>
+                            </filtered-select>
                         </div>
                     </div>
                     <div class="form__row">
@@ -103,24 +150,54 @@
                             <input id="reorder_2_1" type="number" name="reorder_level"/>
                         </div>
                         <div class="form__container_half">
-                            <label for="supplier_2_1">Supplier Code</label>
-                            <input id="supplier_2_1" type="text" name="supplier_code"/>
+                            <label for="supplier_2_1">Supplier</label>
+                            <filtered-select>
+                                <select id="supplier_2_1" name="supplier_code">
+                                    <option value="">Select supplier...</option>
+                                    <option value="SUP001">Acme Corp - Global Electronics</option>
+                                    <option value="SUP002">TechSource Ltd - Computer Components</option>
+                                    <option value="SUP003">Fashion Forward Inc - Clothing & Accessories</option>
+                                    <option value="SUP004">Book Distributors LLC - Publishing</option>
+                                    <option value="SUP005">Home Essentials Co - Furniture & Decor</option>
+                                    <option value="SUP006">Sports Galaxy - Athletic Equipment</option>
+                                    <option value="SUP007">Beauty Supply Chain - Cosmetics</option>
+                                    <option value="SUP008">Auto Parts Direct - Automotive</option>
+                                    <option value="SUP009">Green Living Supplies - Eco Products</option>
+                                    <option value="SUP010">Quick Ship Express - Fast Delivery</option>
+                                </select>
+                            </filtered-select>
                         </div>
                     </div>
                 </form>
                 <form title="Shipping" style="display: none;">
                     <div class="form__row">
                         <div class="form__container_half">
-                            <label for="txt_3_1">Shipping Class</label>
-                            <input id="txt_3_1" type="text" name="shipping_class"/>
+                            <label for="shipping_class_3_1">Shipping Class</label>
+                            <filtered-select placeholder="Search shipping classes...">
+                                <select id="shipping_class_3_1" name="shipping_class">
+                                    <option value="">Select shipping class...</option>
+                                    <option value="standard">Standard Ground (5-7 days)</option>
+                                    <option value="expedited">Expedited (3-4 days)</option>
+                                    <option value="priority">Priority Express (1-2 days)</option>
+                                    <option value="overnight">Overnight (Next day)</option>
+                                    <option value="same_day">Same Day Delivery</option>
+                                    <option value="freight">Freight/LTL (Large items)</option>
+                                    <option value="international">International Standard</option>
+                                    <option value="international_express">International Express</option>
+                                </select>
+                            </filtered-select>
                         </div>
                         <div class="form__container_half">
                             <label for="sel_3_1">Fragile</label>
-                            <select id="sel_3_1" name="fragile">
-                                <option value="">Select...</option>
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
+                            <filtered-select theme="FilteredSelectRoundedTheme">
+                                <select id="sel_3_1" name="fragile">
+                                    <option value="">Select...</option>
+                                    <option value="no">No - Standard handling</option>
+                                    <option value="fragile">Fragile - Handle with care</option>
+                                    <option value="very_fragile">Very Fragile - Extra care required</option>
+                                    <option value="hazardous">Hazardous - Special protocols</option>
+                                </select>
+                            </filtered-select>
                         </div>
                     </div>
                     <div class="form__row">
@@ -145,6 +222,11 @@
     <script type="module">
         import './js/lib/product-form.js';
         import './js/lib/trinary_ce.js';
+    </script>
+    <!-- Include filtered-select scripts -->
+    <script src="js/lib/template.js"></script>
+    <script src="js/lib/filtered-select-element.js"></script>
+    <script type="module">
         
         window.addEventListener('load', () => {
             const productForm = document.querySelector('product-form');
@@ -192,15 +274,15 @@
                         'description': 'Premium noise-canceling wireless headphones with 30-hour battery life',
                         'condition': 'new',
                         'weight': '0.25',
-                        'brand': 'TechAudio',
+                        'brand': 'sony',
                         'is_eco_friendly': 'false',
                         'is_limited_edition': '',
                         'stock_quantity': '45',
                         'warehouse': 'warehouse_a',
                         'reorder_level': '10',
                         'supplier_code': 'SUP001',
-                        'shipping_class': 'standard',
-                        'fragile': 'yes',
+                        'shipping_class': 'expedited',
+                        'fragile': 'fragile',
                         'dimensions': '20x18x8',
                         'special_handling': 'Electronics - Handle with care'
                     }
@@ -260,6 +342,58 @@
                 console.log('🚀 Simulating database load...');
                 simulateBackendLoad();
             }, 2000);
+            
+            // Set up custom theme for the example
+            setTimeout(() => {
+                const customThemeSelect = document.querySelector('#custom-theme-example');
+                if (customThemeSelect && typeof createFilteredSelectTheme !== 'undefined') {
+                    const customTheme = createFilteredSelectTheme({
+                        backgroundColor: '#f0f8ff',
+                        textColor: '#2c3e50',
+                        borderColor: '#3498db',
+                        hoverBorderColor: '#2980b9',
+                        selectedBgColor: '#3498db',
+                        selectedTextColor: 'white',
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        dropdownShadow: '0 4px 12px rgba(52, 152, 219, 0.3)',
+                        transitionSpeed: '0.2s'
+                    });
+                    customThemeSelect.setTheme(customTheme);
+                }
+            }, 500);
+            
+            // Simple positioning helper for dropdowns near viewport edges
+            function setupDropdownPositioning() {
+                const filteredSelects = document.querySelectorAll('filtered-select');
+                
+                filteredSelects.forEach(select => {
+                    select.addEventListener('click', () => {
+                        setTimeout(() => {
+                            const dropdown = select.shadowRoot?.querySelector('.select-widget__dropdown-container');
+                            if (dropdown && dropdown.style.display !== 'none') {
+                                const selectRect = select.getBoundingClientRect();
+                                const viewportHeight = window.innerHeight;
+                                const spaceBelow = viewportHeight - selectRect.bottom;
+                                
+                                // If there's very little space below, try to show above
+                                if (spaceBelow < 200 && selectRect.top > spaceBelow) {
+                                    dropdown.style.top = 'auto';
+                                    dropdown.style.bottom = '100%';
+                                    dropdown.style.maxHeight = Math.min(250, selectRect.top - 10) + 'px';
+                                } else {
+                                    dropdown.style.top = '100%';
+                                    dropdown.style.bottom = 'auto';
+                                    dropdown.style.maxHeight = Math.min(250, spaceBelow - 10) + 'px';
+                                }
+                            }
+                        }, 10);
+                    });
+                });
+            }
+            
+            // Initialize positioning helper
+            setTimeout(setupDropdownPositioning, 1000);
         });
     </script>
 </html>

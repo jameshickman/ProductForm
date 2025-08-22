@@ -6,6 +6,9 @@
  * Released under the GNU LGPL V2
  */
 
+// Static counter for managing z-index across all filtered-select instances
+let filteredSelectZIndexCounter = 10000;
+
 // Import or use existing themes
 // Check if we're in a module context
 if (typeof require !== 'undefined') {
@@ -535,7 +538,25 @@ class FilteredSelect extends HTMLElement {
       }
     }
     
+    // Close other dropdowns and reset their z-index
+    document.querySelectorAll('filtered-select').forEach(otherEl => {
+      if (otherEl !== this && otherEl.opened) {
+        otherEl.closeDropdown();
+      }
+      // Reset z-index for all other instances
+      if (otherEl !== this) {
+        otherEl.style.zIndex = '1000';
+      }
+    });
+
+    // Set high z-index for this instance
+    filteredSelectZIndexCounter++;
+    this.style.zIndex = filteredSelectZIndexCounter.toString();
+    
     this.elWidget.style.display = 'block';
+    // Also set high z-index on the dropdown container
+    this.elWidget.style.zIndex = (filteredSelectZIndexCounter + 1).toString();
+    
     this.elSearch.value = '';
     this.elSearch.focus();
     this.buildResults(this.options);
@@ -547,6 +568,9 @@ class FilteredSelect extends HTMLElement {
   closeDropdown() {
     this.elWidget.style.display = 'none';
     this.opened = false;
+    // Reset z-index when closing
+    this.style.zIndex = '1000';
+    this.elWidget.style.zIndex = '';
   }
 
   buildResults(results) {

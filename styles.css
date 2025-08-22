@@ -22,7 +22,7 @@ product-form {
     background: white;
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Form layout styles */
@@ -270,4 +270,75 @@ form:focus-within {
     margin-left: auto;
     margin-right: 0.3rem;
     margin-top: 0.3rem;
+}
+
+/* Filtered Select Dropdown Positioning */
+filtered-select {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Ensure dropdowns appear above other elements */
+filtered-select .dropdown,
+filtered-select .select-widget__dropdown-container {
+    position: absolute;
+    z-index: 9999 !important;
+    min-width: 100%;
+    max-height: 250px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+}
+
+/* Ensure dropdown appears below the select */
+filtered-select .select-widget__dropdown-container {
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+/* Prevent form containers from clipping dropdowns */
+.form__container_half {
+    overflow: visible;
+}
+
+.form__row {
+    overflow: visible;
+}
+
+form {
+    overflow: visible;
+}
+
+/* Handle dropdowns that would extend below viewport */
+@media (max-height: 600px) {
+    filtered-select .dropdown,
+    filtered-select .select-widget__dropdown-container {
+        max-height: 150px !important;
+    }
+}
+
+/* Mobile adjustments for filtered-select */
+@media (max-width: 768px) {
+    filtered-select .select-widget__dropdown-container {
+        max-height: 200px !important;
+        border-radius: 4px;
+    }
+    
+    /* Ensure dropdowns don't go off-screen on mobile */
+    filtered-select {
+        z-index: 10000;
+    }
+}
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+    filtered-select .select-widget__dropdown-container {
+        max-height: 150px !important;
+        left: -10px !important;
+        right: -10px !important;
+        width: calc(100% + 20px) !important;
+    }
 }
