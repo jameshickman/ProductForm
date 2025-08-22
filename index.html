@@ -290,6 +290,15 @@
                 
                 productForm.value = databaseRecord;
                 console.log('✅ Database record loaded successfully');
+                
+                // Update all filtered-select displays after form data is loaded
+                setTimeout(() => {
+                    document.querySelectorAll('filtered-select').forEach(fs => {
+                        if (fs.updateDisplayText) {
+                            fs.updateDisplayText();
+                        }
+                    });
+                }, 100);
             }
             
             // Enhanced save callback to simulate backend save

@@ -349,6 +349,9 @@ class FilteredSelect extends HTMLElement {
             this.elDisplay.innerText = this.elSelect.options[this.elSelect.selectedIndex].text;
           }
           
+          // Setup observer for external value changes
+          this.setupSelectObserver();
+          
           // Attach widget reference to the select element
           this.elSelect.widget = this;
         } else {
@@ -390,6 +393,9 @@ class FilteredSelect extends HTMLElement {
           if (this.elSelect.selectedIndex >= 0) {
             this.elDisplay.innerText = this.elSelect.options[this.elSelect.selectedIndex].text;
           }
+          
+          // Setup observer for external value changes
+          this.setupSelectObserver();
           
           // Attach widget reference to the select element
           this.elSelect.widget = this;
@@ -702,12 +708,80 @@ class FilteredSelect extends HTMLElement {
     }
   }
 
+  // Method to update display text based on current selection
+  updateDisplayText() {
+    if (this.elSelect && this.elDisplay && this.elSelect.selectedIndex >= 0) {
+      const selectedOption = this.elSelect.options[this.elSelect.selectedIndex];
+      this.elDisplay.innerText = selectedOption.text;
+    } else if (this.elDisplay) {
+      this.elDisplay.innerText = this.getAttribute('placeholder') || 'Select...';
+    }
+  }
+
+  // Setup observer to watch for external value changes
+  setupSelectObserver() {
+    if (!this.elSelect) return;
+
+    // Watch for changes to the select element's attributes and value
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && 
+            (mutation.attributeName === 'value' || mutation.attributeName === 'selected')) {
+          setTimeout(() => this.updateDisplayText(), 0);
+        }
+      });
+    });
+
+    // Observe the select element
+    observer.observe(this.elSelect, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['value', 'selected']
+    });
+
+    // Also observe all option elements
+    Array.from(this.elSelect.options).forEach(option => {
+      observer.observe(option, {
+        attributes: true,
+        attributeFilter: ['selected']
+      });
+    });
+
+    // Listen for change events on the select
+    this.elSelect.addEventListener('change', () => {
+      this.updateDisplayText();
+    });
+
+    // Poll for value changes (handles programmatic value setting)
+    this._lastValue = this.elSelect.value;
+    this._valuePoller = setInterval(() => {
+      if (this.elSelect && this.elSelect.value !== this._lastValue) {
+        this._lastValue = this.elSelect.value;
+        this.updateDisplayText();
+      }
+    }, 100);
+
+    // Store observer for cleanup
+    this._selectObserver = observer;
+  }
+
+  // Cleanup when element is removed
+  disconnectedCallback() {
+    if (this._selectObserver) {
+      this._selectObserver.disconnect();
+    }
+    if (this._valuePoller) {
+      clearInterval(this._valuePoller);
+    }
+  }
+
   // Public API
   reload() {
-    this.elDisplay.innerText = '';
     this.checkForGroups();
     this.loadOptionsData();
     this.buildResults(this.options);
+    // Update display text after reloading
+    this.updateDisplayText();
   }
 }
 
