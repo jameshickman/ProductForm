@@ -124,21 +124,19 @@ const STYLES = `
 .subform-nav-btn {
     padding: 10px;
     padding-left: 16px;
-    border: 1px solid #ccc;
+    border: 3px solid #ccc;
     background: white;
     cursor: pointer;
     text-align: left;
 }
 .subform-nav-btn.active {
-    background: #e0e0e0;
+    background: #d0e8ff;
 }
 .subform-nav-btn.has-data {
     border-color: blue;
-    background: #e6f3ff;
 }
 .subform-nav-btn.has-errors {
-    border-color: red !important;
-    background: #ffe6e6 !important;
+    border-color: red;
 }
 .subform-nav-btn__title {
     display: block;
