@@ -106,6 +106,21 @@ const STYLES = `
 .subform-search-clear.visible {
     display: block;
 }
+.subform-filter-container {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.subform-filter-checkbox {
+    cursor: pointer;
+}
+.subform-filter-label {
+    font-size: 11px;
+    color: #555;
+    cursor: pointer;
+    user-select: none;
+}
 .subform-nav-btn {
     padding: 10px;
     padding-left: 16px;
@@ -187,6 +202,7 @@ export class ProductForm extends HTMLElement {
     #version_field = null;
     #search_input = null;
     #search_clear_btn = null;
+    #filter_has_data_checkbox = null;
     
     constructor() {
         super();
@@ -279,6 +295,27 @@ export class ProductForm extends HTMLElement {
         searchContainer.appendChild(this.#search_input);
         searchContainer.appendChild(this.#search_clear_btn);
         navContainer.appendChild(searchContainer);
+
+        // Create filter container for checkbox
+        const filterContainer = document.createElement('div');
+        filterContainer.className = 'subform-filter-container';
+
+        // Create checkbox
+        this.#filter_has_data_checkbox = document.createElement('input');
+        this.#filter_has_data_checkbox.type = 'checkbox';
+        this.#filter_has_data_checkbox.id = 'subform-filter-has-data';
+        this.#filter_has_data_checkbox.className = 'subform-filter-checkbox';
+        this.#filter_has_data_checkbox.addEventListener('change', () => this.#filter_nav_buttons());
+
+        // Create label
+        const filterLabel = document.createElement('label');
+        filterLabel.htmlFor = 'subform-filter-has-data';
+        filterLabel.className = 'subform-filter-label';
+        filterLabel.textContent = 'Only show sections with data';
+
+        filterContainer.appendChild(this.#filter_has_data_checkbox);
+        filterContainer.appendChild(filterLabel);
+        navContainer.appendChild(filterContainer);
 
         this.#subforms.forEach((form, index) => {
             // Hide all subforms initially
@@ -744,6 +781,7 @@ export class ProductForm extends HTMLElement {
 
     #filter_nav_buttons() {
         const searchTerm = this.#search_input.value.toLowerCase().trim();
+        const filterHasData = this.#filter_has_data_checkbox.checked;
 
         // Show/hide clear button based on whether there's text
         if (searchTerm) {
@@ -752,25 +790,25 @@ export class ProductForm extends HTMLElement {
             this.#search_clear_btn.classList.remove('visible');
         }
 
-        // If search is empty, show all buttons
-        if (!searchTerm) {
-            this.#nav_buttons.forEach(button => {
-                button.style.display = '';
-            });
-            return;
-        }
-
-        // Filter buttons based on title and tags
+        // Filter buttons based on search term and checkbox
         this.#nav_buttons.forEach((button, index) => {
-            const buttonData = this.#nav_buttons_data[index];
-            const matchesTitle = buttonData.title.includes(searchTerm);
-            const matchesTags = buttonData.tags.includes(searchTerm);
+            let shouldShow = true;
 
-            if (matchesTitle || matchesTags) {
-                button.style.display = '';
-            } else {
-                button.style.display = 'none';
+            // Check search term match (if there is one)
+            if (searchTerm) {
+                const buttonData = this.#nav_buttons_data[index];
+                const matchesTitle = buttonData.title.includes(searchTerm);
+                const matchesTags = buttonData.tags.includes(searchTerm);
+                shouldShow = matchesTitle || matchesTags;
             }
+
+            // Check if button has data (if checkbox is checked)
+            if (filterHasData && shouldShow) {
+                const hasData = button.classList.contains('has-data') || button.classList.contains('has-errors');
+                shouldShow = hasData;
+            }
+
+            button.style.display = shouldShow ? '' : 'none';
         });
     }
 

@@ -211,6 +211,38 @@
                         </div>
                     </div>
                 </form>
+                <form title="Other Information" style="display: none;" data-tags="notes,comments,attachments,metadata">
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="internal_notes_4_1">Internal Notes</label>
+                            <input id="internal_notes_4_1" type="text" name="internal_notes"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="customer_comments_4_1">Customer Comments</label>
+                            <input id="customer_comments_4_1" type="text" name="customer_comments"/>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label for="attachment_url_4_1">Attachment URL</label>
+                            <input id="attachment_url_4_1" type="url" name="attachment_url"/>
+                        </div>
+                        <div class="form__container_half">
+                            <label for="metadata_4_1">Metadata (JSON)</label>
+                            <input id="metadata_4_1" type="text" name="metadata"/>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__container_half">
+                            <label>Requires Review</label>
+                            <trinary-input name="requires_review"></trinary-input>
+                        </div>
+                        <div class="form__container_half">
+                            <label>Archived</label>
+                            <trinary-input name="is_archived"></trinary-input>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="form__actions" slot="actions">
                 <button name="save">Save Product</button>
