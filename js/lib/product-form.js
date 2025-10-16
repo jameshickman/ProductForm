@@ -71,6 +71,41 @@ const STYLES = `
     min-width: 120px;
     padding-left: 20px;
 }
+.subform-search-container {
+    position: relative;
+    margin-bottom: 10px;
+}
+.subform-search-input {
+    width: 100%;
+    padding: 8px 30px 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+.subform-search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+.subform-search-clear {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    display: none;
+}
+.subform-search-clear:hover {
+    color: #333;
+}
+.subform-search-clear.visible {
+    display: block;
+}
 .subform-nav-btn {
     padding: 10px;
     padding-left: 16px;
@@ -89,6 +124,17 @@ const STYLES = `
 .subform-nav-btn.has-errors {
     border-color: red !important;
     background: #ffe6e6 !important;
+}
+.subform-nav-btn__title {
+    display: block;
+    font-weight: 500;
+}
+.subform-nav-btn__tags {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    margin-top: 3px;
+    line-height: 1.2;
 }
 .subforms-container {
     flex: 1;
@@ -136,8 +182,11 @@ export class ProductForm extends HTMLElement {
     #current_subform = 0;
     #subforms = [];
     #nav_buttons = [];
+    #nav_buttons_data = [];
     #identity_field = null;
     #version_field = null;
+    #search_input = null;
+    #search_clear_btn = null;
     
     constructor() {
         super();
@@ -206,27 +255,73 @@ export class ProductForm extends HTMLElement {
     #setup_subforms() {
         const subformsSlot = this.querySelector('[slot="subforms"]');
         if (!subformsSlot) return;
-        
+
         this.#subforms = Array.from(subformsSlot.querySelectorAll('form'));
         const navContainer = this.#shadow.getElementById('subform-navigation');
-        
+
+        // Create search container
+        const searchContainer = document.createElement('div');
+        searchContainer.className = 'subform-search-container';
+
+        // Create search input
+        this.#search_input = document.createElement('input');
+        this.#search_input.type = 'text';
+        this.#search_input.className = 'subform-search-input';
+        this.#search_input.placeholder = 'Search sections...';
+        this.#search_input.addEventListener('input', () => this.#filter_nav_buttons());
+
+        // Create clear button
+        this.#search_clear_btn = document.createElement('button');
+        this.#search_clear_btn.className = 'subform-search-clear';
+        this.#search_clear_btn.textContent = '×';
+        this.#search_clear_btn.addEventListener('click', () => this.#clear_search());
+
+        searchContainer.appendChild(this.#search_input);
+        searchContainer.appendChild(this.#search_clear_btn);
+        navContainer.appendChild(searchContainer);
+
         this.#subforms.forEach((form, index) => {
             // Hide all subforms initially
             form.style.display = 'none';
-            
+
             // Create navigation button
             const button = document.createElement('button');
-            button.textContent = form.title || `Form ${index + 1}`;
             button.className = 'subform-nav-btn';
             button.addEventListener('click', () => this.#show_subform(index));
-            
+
+            // Get title and tags
+            const title = form.title || `Form ${index + 1}`;
+            const tags = form.getAttribute('data-tags') || '';
+
+            // Create title element
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'subform-nav-btn__title';
+            titleSpan.textContent = title;
+            button.appendChild(titleSpan);
+
+            // Create tags element if data-tags attribute exists
+            if (tags) {
+                const tagsSpan = document.createElement('span');
+                tagsSpan.className = 'subform-nav-btn__tags';
+                // Replace commas with comma+space for better wrapping
+                tagsSpan.textContent = tags.replace(/,/g, ', ');
+                button.appendChild(tagsSpan);
+            }
+
             navContainer.appendChild(button);
             this.#nav_buttons.push(button);
-            
+
+            // Store button data for filtering
+            this.#nav_buttons_data.push({
+                title: title.toLowerCase(),
+                tags: tags.toLowerCase(),
+                index: index
+            });
+
             // Setup validation messages and field listeners
             this.#setup_form_validation(form, index);
         });
-        
+
         // Show first subform if any exist
         if (this.#subforms.length > 0) {
             this.#show_subform(0);
@@ -631,7 +726,7 @@ export class ProductForm extends HTMLElement {
         const standardFields = form.querySelectorAll('input, select, textarea');
         const customFields = form.querySelectorAll('trinary-input');
         const allFields = [...standardFields, ...customFields];
-        
+
         allFields.forEach(field => {
             if (field.type === 'checkbox' || field.type === 'radio') {
                 field.checked = false;
@@ -639,12 +734,50 @@ export class ProductForm extends HTMLElement {
                 field.value = '';
             }
         });
-        
+
         // Hide validation messages
         form.querySelectorAll('.validation-message').forEach(msg => {
             msg.classList.remove('show');
             msg.style.display = 'none';
         });
+    }
+
+    #filter_nav_buttons() {
+        const searchTerm = this.#search_input.value.toLowerCase().trim();
+
+        // Show/hide clear button based on whether there's text
+        if (searchTerm) {
+            this.#search_clear_btn.classList.add('visible');
+        } else {
+            this.#search_clear_btn.classList.remove('visible');
+        }
+
+        // If search is empty, show all buttons
+        if (!searchTerm) {
+            this.#nav_buttons.forEach(button => {
+                button.style.display = '';
+            });
+            return;
+        }
+
+        // Filter buttons based on title and tags
+        this.#nav_buttons.forEach((button, index) => {
+            const buttonData = this.#nav_buttons_data[index];
+            const matchesTitle = buttonData.title.includes(searchTerm);
+            const matchesTags = buttonData.tags.includes(searchTerm);
+
+            if (matchesTitle || matchesTags) {
+                button.style.display = '';
+            } else {
+                button.style.display = 'none';
+            }
+        });
+    }
+
+    #clear_search() {
+        this.#search_input.value = '';
+        this.#search_clear_btn.classList.remove('visible');
+        this.#filter_nav_buttons();
     }
 }
 
